@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOVA — AI-Powered Personalized Learning Path Engine</title>
+<meta name="description" content="Adaptive learning path recommender with topological skill graphs, multi-signal course ranking, and explainable AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #090F11;
+    --bg-card: rgba(18, 30, 34, 0.75);
+    --bg-card-hover: rgba(26, 44, 49, 0.9);
+    --bg-elevated: #16262B;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-bright: rgba(212, 162, 76, 0.35);
+    --gold: #F59E0B;
+    --gold-glow: rgba(245, 158, 11, 0.25);
+    --emerald: #10B981;
+    --emerald-glow: rgba(16, 185, 129, 0.25);
+    --cyan: #06B6D4;
+    --rose: #F43F5E;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --text-dim: #64748B;
+    --font-serif: 'Fraunces', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg-dark);
+    background-image: 
+      radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  /* Header */
+  header.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 28px;
+    background: rgba(9, 15, 17, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--gold), #D97706);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #090F11;
+    box-shadow: 0 0 20px var(--gold-glow);
+  }
+
+  .brand-text h1 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    background: linear-gradient(90deg, #FFFFFF, #E2E8F0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .brand-text p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--text-main);
+    background: rgba(245, 158, 11, 0.05);
+  }
+
+  /* Stats Bar */
+  .stats-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(14, 24, 27, 0.6);
+  }
+
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .stat-val {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Main Workspace Layout */
+  .workspace {
+    display: grid;
+    grid-template-columns: 360px 1fr 380px;
+    height: calc(100vh - 146px);
+  }
+
+  @media (max-width: 1200px) {
+    .workspace { grid-template-columns: 320px 1fr; }
+    .assistant-column { display: none; }
+  }
+
+  @media (max-width: 860px) {
+    .workspace { grid-template-columns: 1fr; height: auto; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* Sidebar: Trail */
+  .trail-column {
+    border-right: 1px solid var(--border);
+    background: rgba(11, 19, 21, 0.65);
+    overflow-y: auto;
+    padding: 24px 20px;
+  }
+
+  .column-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+    color: var(--text-main);
+  }
+
+  .column-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .trail-timeline {
+    position: relative;
+    padding-left: 22px;
+  }
+
+  .trail-spine {
+    position: absolute;
+    left: 8px;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--emerald) 0%, var(--gold) 50%, var(--border) 100%);
+  }
+
+  .milestone-block {
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .milestone-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .skill-node-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .skill-node-card:hover {
+    background: var(--bg-card-hover);
+    border-color: rgba(245, 158, 11, 0.4);
+    transform: translateX(3px);
+  }
+
+  .skill-node-card.active-step {
+    border-left: 3px solid var(--gold);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.08);
+  }
+
+  .skill-node-card.completed {
+    border-left: 3px solid var(--emerald);
+    opacity: 0.75;
+  }
+
+  .node-indicator {
+    position: absolute;
+    left: -22px;
+    top: 16px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 2px solid var(--text-dim);
+    transition: all 0.3s ease;
+  }
+
+  .active-step .node-indicator {
+    border-color: var(--gold);
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold-glow);
+    animation: pulseGlow 2s infinite;
+  }
+
+  .completed .node-indicator {
+    border-color: var(--emerald);
+    background: var(--emerald);
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.35); }
+  }
+
+  .skill-node-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .skill-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-main);
+  }
+
+  .difficulty-badge {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-muted);
+  }
+
+  .skill-node-meta {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    margin: 4px 0 8px 0;
+  }
+
+  .skill-node-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .btn-complete {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--emerald);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-complete:hover {
+    background: var(--emerald);
+    color: #090F11;
+  }
+
+  .btn-why {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-why:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Center: Recommendations & Courses */
+  .main-column {
+    overflow-y: auto;
+    padding: 24px 28px;
+    background: rgba(9, 15, 17, 0.3);
+  }
+
+  .goal-card {
+    background: linear-gradient(135deg, rgba(22, 38, 43, 0.85), rgba(16, 28, 32, 0.95));
+    border: 1px solid var(--border-bright);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .goal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .badge-pulse {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulseGlow 1.5s infinite;
+  }
+
+  .goal-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .pill {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+  }
+
+  .pill.known { border-color: rgba(16, 185, 129, 0.4); color: var(--emerald); }
+  .pill.target { border-color: rgba(245, 158, 11, 0.4); color: var(--gold); }
+  .pill.pace { border-color: rgba(6, 182, 212, 0.4); color: var(--cyan); }
+
+  /* Starter Prompt Chips */
+  .prompt-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .chip-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .chip-btn:hover {
+    border-color: var(--gold);
+    color: var(--text-main);
+    background: rgba(245, 158, 11, 0.08);
+  }
+
+  /* Courses List */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    color: var(--text-main);
+  }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .course-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .course-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-bright);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .course-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .course-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .course-score-badge {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--gold);
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .course-meta-tags {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .tag {
+    font-size: 0.7rem;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+  }
+
+  .tag.provider { color: var(--cyan); background: rgba(6, 182, 212, 0.08); }
+  .tag.format { color: var(--emerald); background: rgba(16, 185, 129, 0.08); }
+
+  .course-reasons {
+    list-style: none;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .course-reasons li {
+    position: relative;
+    padding-left: 14px;
+  }
+
+  .course-reasons li::before {
+    content: "•";
+    position: absolute;
+    left: 2px;
+    color: var(--gold);
+  }
+
+  .feedback-row {
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .feedback-label {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  .feedback-btns {
+    display: flex;
+    gap: 4px;
+  }
+
+  .fb-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    padding: 3px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .fb-btn:hover {
+    border-color: var(--gold);
+    color: var(--text-main);
+  }
+
+  /* Right Sidebar: AI Assistant */
+  .assistant-column {
+    border-left: 1px solid var(--border);
+    background: rgba(11, 19, 21, 0.7);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .chat-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .msg-bubble {
+    max-width: 88%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
+  .msg-bubble.assistant {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    align-self: flex-start;
+  }
+
+  .msg-bubble.user {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #FFF;
+    align-self: flex-end;
+  }
+
+  .chat-input-area {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    background: rgba(9, 15, 17, 0.95);
+    display: flex;
+    gap: 8px;
+  }
+
+  .chat-input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 0.85rem;
+  }
+
+  .chat-input:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .chat-send-btn {
+    background: var(--gold);
+    color: #090F11;
+    border: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .chat-send-btn:hover {
+    background: #D97706;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+
+  .modal-window {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 650px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-close {
+    float: right;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="top-nav">
+  <div class="brand">
+    <div class="brand-logo">N</div>
+    <div class="brand-text">
+      <h1>NOVA Path Recommender</h1>
+      <p>Graph-Guided Adaptive Learning Architecture</p>
+    </div>
+  </div>
+
+  <div class="nav-actions">
+    <button class="btn-outline" id="btn-open-catalog">📚 Skill Catalog</button>
+    <a class="btn-outline" href="/docs" target="_blank">⚡ API Docs</a>
+  </div>
+</header>
+
+<!-- Stats Strip -->
+<div class="stats-strip">
+  <div class="stat-card">
+    <div class="stat-icon">🎓</div>
+    <div>
+      <div class="stat-val" id="stat-known">0</div>
+      <div class="stat-label">Skills Known</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🎯</div>
+    <div>
+      <div class="stat-val" id="stat-remaining">0</div>
+      <div class="stat-label">Skills In Gap</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🚩</div>
+    <div>
+      <div class="stat-val" id="stat-milestones">0</div>
+      <div class="stat-label">Milestones Left</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">⚖️</div>
+    <div>
+      <div class="stat-val" id="stat-bias">+0.0</div>
+      <div class="stat-label">Difficulty Bias</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Workspace -->
+<div class="workspace">
+  <!-- Left: The Trail -->
+  <aside class="trail-column">
+    <h2 class="column-title">Your Learning Trail</h2>
+    <p class="column-subtitle">Topological generations dynamically rerouted as you complete skills.</p>
+    <div class="trail-timeline" id="trail-container">
+      <div style="color: var(--text-dim); font-size: 0.85rem; padding: 20px 0;">Enter your learning goals or pick a quick starter below to build your trail.</div>
+    </div>
+  </aside>
+
+  <!-- Center: Recommendations -->
+  <main class="main-column">
+    <!-- Active Goal Banner -->
+    <div class="goal-card" id="goal-card">
+      <div class="goal-card-header">
+        <div class="badge-pulse"><span class="pulse-dot"></span> Personalized Learning Objective</div>
+      </div>
+      <div id="goal-summary-text" style="font-size: 0.95rem; color: var(--text-main);">
+        Describe your background & career goal to construct your customized roadmap.
+      </div>
+      <div class="goal-pills" id="goal-pills"></div>
+    </div>
+
+    <!-- Quick Prompts -->
+    <div class="prompt-chips">
+      <span style="font-size: 0.75rem; color: var(--text-dim); align-self: center;">Quick Start:</span>
+      <button class="chip-btn" onclick="startWithPrompt('I know basic Python and SQL. I want to become a Data Analyst. 5 hrs a week.')">📊 Data Analyst (5h/wk)</button>
+      <button class="chip-btn" onclick="startWithPrompt('I know Python and Statistics. I want to be a Data Scientist. 10 hrs a week.')">🧠 Data Scientist (10h/wk)</button>
+      <button class="chip-btn" onclick="startWithPrompt('I know HTML and CSS. I want to become a Frontend Developer. 8 hrs a week.')">💻 Frontend Dev</button>
+      <button class="chip-btn" onclick="startWithPrompt('I know Linux and Git. I want to become a DevOps Engineer. 6 hrs a week.')">☁️ DevOps Engineer</button>
+    </div>
+
+    <!-- Recommendations Grid -->
+    <div class="section-header">
+      <h2 class="section-title">Recommended Courses for Current Milestones</h2>
+      <span style="font-size: 0.78rem; color: var(--text-muted);">Multi-signal scoring & feedback adaptation</span>
+    </div>
+
+    <div class="courses-grid" id="courses-container">
+      <div style="color: var(--text-dim); font-size: 0.85rem; padding: 30px; grid-column: 1 / -1; text-align: center;">
+        No active course recommendations yet. Start a session to view personalized courses.
+      </div>
+    </div>
+  </main>
+
+  <!-- Right: Assistant -->
+  <aside class="assistant-column">
+    <div class="chat-header">
+      <div style="font-size: 1.1rem;">🤖</div>
+      <div>
+        <div style="font-weight: 600; font-size: 0.9rem;">AI Learning Advisor</div>
+        <div style="font-size: 0.72rem; color: var(--emerald);">● Online & Tool-Connected</div>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg-bubble assistant">
+        Hello! I'm your AI curriculum assistant. Tell me what skills you already have and what you'd like to achieve, or ask me questions like <i>"Why milestone 1?"</i> or <i>"Why do I need statistics?"</i>.
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Ask a question or enter your goal..." />
+      <button class="chat-send-btn" id="chat-send-btn">Send</button>
+    </div>
+  </aside>
+</div>
+
+<!-- Modal Dialog -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal-window">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modal-title" style="font-family: var(--font-serif); margin-bottom: 12px;"></h3>
+    <div id="modal-body" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;"></div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "";
+let sessionId = null;
+let currentMilestones = [];
+let currentRecs = {};
+
+const chatMessages = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSendBtn = document.getElementById("chat-send-btn");
+const trailContainer = document.getElementById("trail-container");
+const coursesContainer = document.getElementById("courses-container");
+const goalSummaryText = document.getElementById("goal-summary-text");
+const goalPills = document.getElementById("goal-pills");
+
+function appendMsg(role, text) {
+  const div = document.createElement("div");
+  div.className = `msg-bubble ${role}`;
+  div.innerHTML = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+async function apiCall(endpoint, options = {}) {
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    headers: { "Content-Type": "application/json" },
+    ...options,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail || "API request failed");
+  }
+  return res.json();
+}
+
+function updateStats(known = 0, remaining = 0, milestones = 0, bias = 0.0) {
+  document.getElementById("stat-known").textContent = known;
+  document.getElementById("stat-remaining").textContent = remaining;
+  document.getElementById("stat-milestones").textContent = milestones;
+  const biasFormatted = (bias >= 0 ? "+" : "") + Number(bias).toFixed(1);
+  document.getElementById("stat-bias").textContent = biasFormatted;
+}
+
+function renderTrail(milestones) {
+  currentMilestones = milestones || [];
+  trailContainer.innerHTML = "";
+
+  if (currentMilestones.length === 0) {
+    trailContainer.innerHTML = `<div style="color: var(--emerald); padding: 20px 0;">🎉 You've conquered all milestones in this track!</div>`;
+    updateStats(Number(document.getElementById("stat-known").textContent), 0, 0);
+    return;
+  }
+
+  const spine = document.createElement("div");
+  spine.className = "trail-spine";
+  trailContainer.appendChild(spine);
+
+  let totalRemainingSkills = 0;
+
+  currentMilestones.forEach((m, idx) => {
+    const block = document.createElement("div");
+    block.className = "milestone-block";
+
+    const tag = document.createElement("div");
+    tag.className = "milestone-tag";
+    tag.textContent = `Milestone ${m.milestone_number} · Stage ${idx + 1}`;
+    block.appendChild(tag);
+
+    m.skills.forEach(skill => {
+      totalRemainingSkills++;
+      const card = document.createElement("div");
+      card.className = `skill-node-card ${idx === 0 ? "active-step" : ""}`;
+
+      const indicator = document.createElement("div");
+      indicator.className = "node-indicator";
+      card.appendChild(indicator);
+
+      card.innerHTML += `
+        <div class="skill-node-header">
+          <div class="skill-name">${skill.name}</div>
+          <div class="difficulty-badge">Level ${skill.difficulty}</div>
+        </div>
+        <div class="skill-node-meta">${skill.domain} · ${skill.description || ""}</div>
+        <div class="skill-node-actions">
+          <button class="btn-complete" onclick="event.stopPropagation(); handleCompleteSkill('${skill.id}')">✓ Mark Done</button>
+          <button class="btn-why" onclick="event.stopPropagation(); explainSkill('${skill.id}')">Why This?</button>
+        </div>
+      `;
+
+      block.appendChild(card);
+    });
+
+    trailContainer.appendChild(block);
+  });
+
+  const knownCount = Number(document.getElementById("stat-known").textContent);
+  const biasVal = parseFloat(document.getElementById("stat-bias").textContent) || 0.0;
+  updateStats(knownCount, totalRemainingSkills, currentMilestones.length, biasVal);
+}
+
+function renderCourses(recommendations) {
+  currentRecs = recommendations || {};
+  coursesContainer.innerHTML = "";
+
+  const entries = Object.entries(currentRecs);
+  if (entries.length === 0) {
+    coursesContainer.innerHTML = `<div style="color: var(--text-dim); padding: 30px; grid-column: 1 / -1; text-align: center;">No courses required for remaining skills.</div>`;
+    return;
+  }
+
+  entries.forEach(([skillId, recs]) => {
+    recs.forEach(r => {
+      const c = r.course;
+      const card = document.createElement("div");
+      card.className = "course-card";
+
+      card.innerHTML = `
+        <div>
+          <div class="course-card-top">
+            <div class="course-title">${c.title}</div>
+            <div class="course-score-badge">${r.score}/100</div>
+          </div>
+          <div class="course-meta-tags">
+            <span class="tag provider">${c.provider}</span>
+            <span class="tag format">${c.format}</span>
+            <span class="tag">⏱️ ~${c.duration_hrs}h</span>
+          </div>
+          <ul class="course-reasons">
+            ${r.reasons.map(reason => `<li>${reason}</li>`).join("")}
+          </ul>
+        </div>
+        <div class="feedback-row">
+          <span class="feedback-label">Difficulty Fit:</span>
+          <div class="feedback-btns">
+            <button class="fb-btn" onclick="sendFeedback('${skillId}', 'too_easy')">⚡ Too Easy</button>
+            <button class="fb-btn" onclick="sendFeedback('${skillId}', 'just_right')">🎯 Just Right</button>
+            <button class="fb-btn" onclick="sendFeedback('${skillId}', 'too_hard')">🔥 Too Hard</button>
+          </div>
+        </div>
+      `;
+      coursesContainer.appendChild(card);
+    });
+  });
+}
+
+async function startSession(text) {
+  appendMsg("user", text);
+  try {
+    const data = await apiCall("/session/start", {
+      method: "POST",
+      body: JSON.stringify({ text }),
+    });
+
+    sessionId = data.session_id;
+    goalSummaryText.innerHTML = `Track initialized: <b>${data.target_skills.join(", ") || "Custom Path"}</b>`;
+
+    goalPills.innerHTML = `
+      <span class="pill known">✓ ${data.known_skills.length} Known Skills</span>
+      <span class="pill target">🎯 ${data.target_skills.length} Target Goals</span>
+      ${data.hours_per_week ? `<span class="pill pace">⚡ ${data.hours_per_week} hrs/week pace</span>` : ""}
+    `;
+
+    updateStats(data.known_skills.length, 0, 0, data.difficulty_bias);
+
+    // Refresh Path & Recommendations
+    const pathData = await apiCall(`/session/${sessionId}/path`);
+    renderTrail(pathData.milestones);
+
+    const recData = await apiCall(`/session/${sessionId}/recommendations`);
+    renderCourses(recData.recommendations);
+
+    appendMsg("assistant", `I've constructed your personalized learning roadmap across ${pathData.milestones.length} milestone(s). Check your trail on the left and recommended courses above!`);
+  } catch (err) {
+    appendMsg("assistant", `Error starting session: ${err.message}`);
+  }
+}
+
+function startWithPrompt(text) {
+  startSession(text);
+}
+
+async function handleCompleteSkill(skillId) {
+  if (!sessionId) return;
+  try {
+    const res = await apiCall(`/session/${sessionId}/complete-skill`, {
+      method: "POST",
+      body: JSON.stringify({ skill_id: skillId }),
+    });
+
+    updateStats(res.known_skills.length, 0, res.updated_milestones.length);
+    renderTrail(res.updated_milestones);
+    renderCourses(res.recommendations);
+    appendMsg("assistant", `🎉 Awesome! Marked <b>${skillId}</b> complete. Your path and remaining courses have been updated.`);
+  } catch (err) {
+    appendMsg("assistant", `Error completing skill: ${err.message}`);
+  }
+}
+
+async function sendFeedback(skillId, feedback) {
+  if (!sessionId) return;
+  try {
+    const res = await apiCall(`/session/${sessionId}/feedback`, {
+      method: "POST",
+      body: JSON.stringify({ skill_id: skillId, feedback }),
+    });
+
+    const biasVal = res.difficulty_bias;
+    const knownCount = Number(document.getElementById("stat-known").textContent);
+    const remCount = Number(document.getElementById("stat-remaining").textContent);
+    const mCount = Number(document.getElementById("stat-milestones").textContent);
+    updateStats(knownCount, remCount, mCount, biasVal);
+
+    renderCourses(res.recommendations);
+    appendMsg("assistant", `Feedback recorded (${feedback.replace('_', ' ')}). Re-tuned difficulty bias to <b>${biasVal >= 0 ? '+' : ''}${biasVal.toFixed(1)}</b>.`);
+  } catch (err) {
+    appendMsg("assistant", `Error recording feedback: ${err.message}`);
+  }
+}
+
+async function explainSkill(skillId) {
+  if (!sessionId) {
+    openModal("Skill Explanation", "Please set your goal first to see why this skill is needed.");
+    return;
+  }
+  try {
+    const data = await apiCall(`/session/${sessionId}/explain/skill/${skillId}`);
+    openModal(`Why '${skillId}'?`, data.explanation);
+  } catch (err) {
+    openModal("Explanation", err.message);
+  }
+}
+
+function openModal(title, content) {
+  document.getElementById("modal-title").textContent = title;
+  document.getElementById("modal-body").innerHTML = content;
+  document.getElementById("modal-backdrop").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("modal-backdrop").style.display = "none";
+}
+
+document.getElementById("btn-open-catalog").onclick = async () => {
+  try {
+    const data = await apiCall("/skills");
+    let html = "<div style='display:flex; flex-direction:column; gap:10px;'>";
+    data.skills.forEach(s => {
+      html += `
+        <div style="background: rgba(255,255,255,0.03); border:1px solid var(--border); padding:10px; border-radius:6px;">
+          <div style="font-weight:600; color:var(--text-main);">${s.name} <span style="font-size:0.75rem; color:var(--gold);">(${s.domain})</span></div>
+          <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">${s.description}</div>
+          <div style="font-size:0.7rem; color:var(--text-dim); margin-top:4px;">Prerequisites: ${s.prerequisites.join(', ') || 'None'}</div>
+        </div>
+      `;
+    });
+    html += "</div>";
+    openModal("Comprehensive Skill Catalog", html);
+  } catch (err) {
+    openModal("Catalog Error", err.message);
+  }
+};
+
+async function handleChat() {
+  const text = chatInput.value.trim();
+  if (!text) return;
+  chatInput.value = "";
+
+  if (!sessionId) {
+    await startSession(text);
+    return;
+  }
+
+  appendMsg("user", text);
+  try {
+    const data = await apiCall(`/session/${sessionId}/chat`, {
+      method: "POST",
+      body: JSON.stringify({ message: text }),
+    });
+
+    appendMsg("assistant", data.reply);
+
+    // Refresh Path & Recommendations in case tool calls modified state
+    const pathData = await apiCall(`/session/${sessionId}/path`);
+    renderTrail(pathData.milestones);
+    const recData = await apiCall(`/session/${sessionId}/recommendations`);
+    renderCourses(recData.recommendations);
+  } catch (err) {
+    appendMsg("assistant", `Chat Error: ${err.message}`);
+  }
+}
+
+chatSendBtn.onclick = handleChat;
+chatInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") handleChat();
+});
+</script>
+
+</body>
+</html>

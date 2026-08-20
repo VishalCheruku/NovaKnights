@@ -1,0 +1,24 @@
+[
+  {"id": "c1", "title": "Python for Everybody", "provider": "Coursera", "skill_ids": ["py_basics"], "difficulty": 1, "format": "video", "duration_hrs": 20},
+  {"id": "c2", "title": "Statistics with Python", "provider": "edX", "skill_ids": ["stats_basics"], "difficulty": 1, "format": "video", "duration_hrs": 15},
+  {"id": "c3", "title": "Pandas & NumPy Crash Course", "provider": "YouTube", "skill_ids": ["pandas_numpy"], "difficulty": 2, "format": "video", "duration_hrs": 8},
+  {"id": "c4", "title": "Data Visualization with Seaborn", "provider": "Kaggle Learn", "skill_ids": ["data_viz"], "difficulty": 2, "format": "reading", "duration_hrs": 5},
+  {"id": "c5", "title": "Hands-On Machine Learning", "provider": "Book/O'Reilly", "skill_ids": ["ml_supervised"], "difficulty": 3, "format": "reading", "duration_hrs": 30},
+  {"id": "c6", "title": "Clustering & PCA Project", "provider": "Kaggle", "skill_ids": ["ml_unsupervised"], "difficulty": 3, "format": "project", "duration_hrs": 10},
+  {"id": "c7", "title": "Deep Learning Specialization", "provider": "Coursera", "skill_ids": ["deep_learning"], "difficulty": 4, "format": "video", "duration_hrs": 40},
+
+  {"id": "c8", "title": "The Odin Project: HTML/CSS", "provider": "Odin Project", "skill_ids": ["html_css"], "difficulty": 1, "format": "reading", "duration_hrs": 15},
+  {"id": "c9", "title": "JavaScript.info", "provider": "Free Site", "skill_ids": ["js_basics"], "difficulty": 1, "format": "reading", "duration_hrs": 20},
+  {"id": "c10", "title": "React - The Complete Guide", "provider": "Udemy", "skill_ids": ["react_basics"], "difficulty": 2, "format": "video", "duration_hrs": 25},
+  {"id": "c11", "title": "Building REST APIs with Flask", "provider": "YouTube", "skill_ids": ["backend_apis"], "difficulty": 2, "format": "video", "duration_hrs": 10},
+  {"id": "c12", "title": "SQL for Data Analysis", "provider": "Mode Analytics", "skill_ids": ["databases"], "difficulty": 2, "format": "reading", "duration_hrs": 8},
+  {"id": "c13", "title": "Full-Stack Capstone Project", "provider": "Self-guided", "skill_ids": ["fullstack_proj"], "difficulty": 3, "format": "project", "duration_hrs": 20},
+
+  {"id": "c14", "title": "Linux Command Line Basics", "provider": "freeCodeCamp", "skill_ids": ["linux_basics"], "difficulty": 1, "format": "video", "duration_hrs": 6},
+  {"id": "c15", "title": "Git & GitHub Crash Course", "provider": "YouTube", "skill_ids": ["git_basics"], "difficulty": 1, "format": "video", "duration_hrs": 4},
+  {"id": "c16", "title": "Docker for Beginners", "provider": "Docker Docs", "skill_ids": ["docker_basics"], "difficulty": 2, "format": "reading", "duration_hrs": 10},
+  {"id": "c17", "title": "CI/CD with GitHub Actions", "provider": "YouTube", "skill_ids": ["ci_cd"], "difficulty": 3, "format": "project", "duration_hrs": 8},
+  {"id": "c18", "title": "AWS Cloud Practitioner Essentials", "provider": "AWS Training", "skill_ids": ["cloud_deploy"], "difficulty": 3, "format": "video", "duration_hrs": 12},
+
+  {"id": "c19", "title": "Deploying ML Models with FastAPI", "provider": "YouTube", "skill_ids": ["ml_deploy"], "difficulty": 4, "format": "project", "duration_hrs": 12}
+]

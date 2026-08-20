@@ -1,0 +1,24 @@
+[
+  {"id": "py_basics", "name": "Python Basics", "domain": "Data Science", "difficulty": 1, "description": "Variables, loops, functions, data structures in Python.", "prerequisites": []},
+  {"id": "stats_basics", "name": "Statistics Fundamentals", "domain": "Data Science", "difficulty": 1, "description": "Mean, variance, distributions, hypothesis testing.", "prerequisites": []},
+  {"id": "pandas_numpy", "name": "Data Wrangling (Pandas/NumPy)", "domain": "Data Science", "difficulty": 2, "description": "Cleaning and manipulating tabular data.", "prerequisites": ["py_basics"]},
+  {"id": "data_viz", "name": "Data Visualization", "domain": "Data Science", "difficulty": 2, "description": "Matplotlib, Seaborn, storytelling with charts.", "prerequisites": ["pandas_numpy"]},
+  {"id": "ml_supervised", "name": "Supervised Machine Learning", "domain": "Data Science", "difficulty": 3, "description": "Regression, classification, model evaluation.", "prerequisites": ["stats_basics", "pandas_numpy"]},
+  {"id": "ml_unsupervised", "name": "Unsupervised Learning", "domain": "Data Science", "difficulty": 3, "description": "Clustering, dimensionality reduction.", "prerequisites": ["ml_supervised"]},
+  {"id": "deep_learning", "name": "Deep Learning Foundations", "domain": "Data Science", "difficulty": 4, "description": "Neural networks, backpropagation, CNNs/RNNs basics.", "prerequisites": ["ml_supervised"]},
+
+  {"id": "html_css", "name": "HTML & CSS", "domain": "Web Development", "difficulty": 1, "description": "Structuring and styling web pages.", "prerequisites": []},
+  {"id": "js_basics", "name": "JavaScript Basics", "domain": "Web Development", "difficulty": 1, "description": "Syntax, DOM manipulation, events.", "prerequisites": ["html_css"]},
+  {"id": "react_basics", "name": "React Fundamentals", "domain": "Web Development", "difficulty": 2, "description": "Components, props, state, hooks.", "prerequisites": ["js_basics"]},
+  {"id": "backend_apis", "name": "Backend APIs (REST)", "domain": "Web Development", "difficulty": 2, "description": "Building REST APIs with Node/Express or Flask.", "prerequisites": ["js_basics"]},
+  {"id": "databases", "name": "Databases (SQL)", "domain": "Web Development", "difficulty": 2, "description": "Relational modeling, queries, joins.", "prerequisites": []},
+  {"id": "fullstack_proj", "name": "Full-Stack Project Integration", "domain": "Web Development", "difficulty": 3, "description": "Connecting frontend, backend, and database.", "prerequisites": ["react_basics", "backend_apis", "databases"]},
+
+  {"id": "linux_basics", "name": "Linux & Shell Basics", "domain": "Cloud/DevOps", "difficulty": 1, "description": "Command line, file systems, permissions.", "prerequisites": []},
+  {"id": "git_basics", "name": "Git & Version Control", "domain": "Cloud/DevOps", "difficulty": 1, "description": "Branching, commits, PR workflows.", "prerequisites": []},
+  {"id": "docker_basics", "name": "Containers with Docker", "domain": "Cloud/DevOps", "difficulty": 2, "description": "Images, containers, Dockerfiles.", "prerequisites": ["linux_basics"]},
+  {"id": "ci_cd", "name": "CI/CD Pipelines", "domain": "Cloud/DevOps", "difficulty": 3, "description": "Automated testing and deployment pipelines.", "prerequisites": ["git_basics", "docker_basics"]},
+  {"id": "cloud_deploy", "name": "Cloud Deployment (AWS/GCP basics)", "domain": "Cloud/DevOps", "difficulty": 3, "description": "Deploying apps to cloud infrastructure.", "prerequisites": ["docker_basics"]},
+
+  {"id": "ml_deploy", "name": "ML Model Deployment", "domain": "Cross-Domain", "difficulty": 4, "description": "Serving ML models via APIs and cloud infra.", "prerequisites": ["ml_supervised", "backend_apis", "cloud_deploy"]}
+]
